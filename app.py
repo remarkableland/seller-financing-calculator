@@ -64,6 +64,20 @@ def main():
         layout="wide"
     )
 
+    # Custom CSS to make the primary button green
+    st.markdown("""
+        <style>
+        .stButton > button[kind="primary"] {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        .stButton > button[kind="primary"]:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
     st.title("Seller Financing Calculator")
     st.markdown("Calculate and compare seller financing options with Texas TILA-compliant disclosures.")
 
