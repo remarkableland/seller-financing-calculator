@@ -292,9 +292,13 @@ def generate_tila_disclosure(summary: LoanSummary) -> bytes:
     draw.text((MARGIN, disclaimer_y2),
               "Actual terms are subject to final contract and applicable law.",
               font=small_font, fill=GRAY)
+    disclaimer_y3 = disclaimer_y2 + 28
+    draw.text((MARGIN, disclaimer_y3),
+              "Monthly payment does not include property taxes, insurance, or other expenses which are the buyer's responsibility.",
+              font=small_font, fill=GRAY)
 
     # Crop image to actual content height
-    final_height = disclaimer_y2 + 50
+    final_height = disclaimer_y3 + 50
     img = img.crop((0, 0, WIDTH, final_height))
 
     # Convert to bytes
