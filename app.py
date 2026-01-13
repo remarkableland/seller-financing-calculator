@@ -93,15 +93,16 @@ def main():
         help="Total property purchase price"
     )
 
-    down_payment = st.sidebar.number_input(
-        "Down Payment ($)",
+    down_payment_pct_input = st.sidebar.number_input(
+        "Down Payment (%)",
         min_value=0.0,
-        max_value=purchase_price,
-        value=25000.0,
-        step=1000.0,
-        format="%.2f",
-        help="Amount buyer pays at closing"
+        max_value=100.0,
+        value=25.0,
+        step=1.0,
+        format="%.1f",
+        help="Percentage of purchase price buyer pays at closing"
     )
+    down_payment = purchase_price * (down_payment_pct_input / 100)
 
     closing_costs = st.sidebar.number_input(
         "Closing Costs ($)",
@@ -202,8 +203,9 @@ def main():
         if params['interest_rate'] < 0.08:
             st.warning(f"⚠️ Interest rate is below 8% ({params['interest_rate']*100:.3f}%). Consider whether this rate is sufficient.")
         down_payment_pct = (params['down_payment'] / params['purchase_price']) * 100
-        if down_payment_pct < 10:
-            st.warning(f"⚠️ Down payment is below 10% ({down_payment_pct:.1f}%). Consider requiring a higher down payment.")
+        min_down_payment = max(params['purchase_price'] * 0.10, 10000)
+        if params['down_payment'] < min_down_payment:
+            st.warning(f"⚠️ Down payment ({format_currency(params['down_payment']).replace('$', r'\\$')}) is below minimum of 10% or \\$10,000 (whichever is greater: {format_currency(min_down_payment).replace('$', r'\\$')}). Consider requiring a higher down payment.")
         if params['purchase_price'] <= params['asset_cost_basis']:
             purchase_str = format_currency(params['purchase_price']).replace('$', r'\$')
             basis_str = format_currency(params['asset_cost_basis']).replace('$', r'\$')
