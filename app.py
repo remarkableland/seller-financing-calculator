@@ -198,9 +198,14 @@ def main():
 
         # Warnings
         if params['term_years'] > 7:
-            st.error(f"Term exceeds 7 years ({params['term_years']} years). Longer terms may increase risk.")
-        if params['interest_rate'] < 0.10:
-            st.error(f"Interest rate is below 10% ({params['interest_rate']*100:.3f}%). Consider whether this rate is sufficient.")
+            st.warning(f"⚠️ Term exceeds 7 years ({params['term_years']} years). Longer terms may increase risk.")
+        if params['interest_rate'] < 0.08:
+            st.warning(f"⚠️ Interest rate is below 8% ({params['interest_rate']*100:.3f}%). Consider whether this rate is sufficient.")
+        down_payment_pct = (params['down_payment'] / params['purchase_price']) * 100
+        if down_payment_pct < 10:
+            st.warning(f"⚠️ Down payment is below 10% ({down_payment_pct:.1f}%). Consider requiring a higher down payment.")
+        if params['purchase_price'] <= params['asset_cost_basis']:
+            st.warning(f"⚠️ Purchase price ({format_currency(params['purchase_price'])}) is at or below asset cost basis ({format_currency(params['asset_cost_basis'])}). No profit margin on sale.")
 
         # Summary header
         st.header("Loan Comparison")
