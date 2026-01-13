@@ -259,6 +259,11 @@ def generate_tila_disclosure(summary: LoanSummary) -> bytes:
     draw.text((MARGIN + 450, trans_y), format_currency(summary.closing_costs), font=schedule_font, fill=BLACK)
     trans_y += line_height
 
+    # Monthly Servicing Fee
+    draw.text((MARGIN, trans_y), f"Monthly Servicing Fee:", font=schedule_font, fill=BLACK)
+    draw.text((MARGIN + 450, trans_y), format_currency(summary.monthly_servicing_fee), font=schedule_font, fill=BLACK)
+    trans_y += line_height
+
     # Divider line
     draw.line([(MARGIN, trans_y + 5), (MARGIN + 700, trans_y + 5)], fill=BLACK, width=2)
     trans_y += 15
