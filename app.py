@@ -205,7 +205,9 @@ def main():
         if down_payment_pct < 10:
             st.warning(f"⚠️ Down payment is below 10% ({down_payment_pct:.1f}%). Consider requiring a higher down payment.")
         if params['purchase_price'] <= params['asset_cost_basis']:
-            st.warning(f"⚠️ Purchase price ({format_currency(params['purchase_price'])}) is at or below asset cost basis ({format_currency(params['asset_cost_basis'])}). No profit margin on sale.")
+            purchase_str = format_currency(params['purchase_price']).replace('$', r'\$')
+            basis_str = format_currency(params['asset_cost_basis']).replace('$', r'\$')
+            st.warning(f"⚠️ Purchase price ({purchase_str}) is at or below asset cost basis ({basis_str}). No profit margin on sale.")
 
         # Summary header
         st.header("Loan Comparison")
