@@ -208,6 +208,11 @@ def main():
             purchase_str = format_currency(params['purchase_price']).replace('$', r'\$')
             basis_str = format_currency(params['asset_cost_basis']).replace('$', r'\$')
             st.warning(f"⚠️ Purchase price ({purchase_str}) is at or below asset cost basis ({basis_str}). No profit margin on sale.")
+        if params['closing_costs'] < 100:
+            st.warning(f"⚠️ Closing costs are below \\$100 ({format_currency(params['closing_costs']).replace('$', r'\\$')}). Verify this is correct.")
+        gross_margin = ((params['purchase_price'] - params['asset_cost_basis']) / params['purchase_price']) * 100 if params['purchase_price'] > 0 else 0
+        if gross_margin > 50:
+            st.warning(f"⚠️ Gross margin exceeds 50% ({gross_margin:.1f}%). Verify pricing is appropriate.")
 
         # Summary header
         st.header("Loan Comparison")
