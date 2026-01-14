@@ -64,7 +64,7 @@ def main():
         layout="wide"
     )
 
-    # Custom CSS to make the primary button green
+    # Custom CSS for styling
     st.markdown("""
         <style>
         .stButton > button[kind="primary"] {
@@ -74,6 +74,16 @@ def main():
         .stButton > button[kind="primary"]:hover {
             background-color: #218838;
             border-color: #1e7e34;
+        }
+        /* Highlight required fields with yellow background */
+        div[data-testid="stSidebar"] div[data-testid="stNumberInput"]:has(label:contains("Purchase Price")) input,
+        div[data-testid="stSidebar"] div[data-testid="stNumberInput"]:has(label:contains("Asset Cost Basis")) input {
+            background-color: #fffacd !important;
+        }
+        /* Alternative approach using nth-child for first and fourth number inputs */
+        div[data-testid="stSidebar"] .stNumberInput:nth-of-type(1) input,
+        div[data-testid="stSidebar"] .stNumberInput:nth-of-type(4) input {
+            background-color: #fffacd !important;
         }
         </style>
     """, unsafe_allow_html=True)
@@ -87,10 +97,11 @@ def main():
     purchase_price = st.sidebar.number_input(
         "Purchase Price ($)",
         min_value=0.0,
-        value=100000.0,
+        value=None,
         step=1000.0,
         format="%.2f",
-        help="Total property purchase price"
+        help="Total property purchase price",
+        placeholder="Enter purchase price"
     )
 
     down_payment_pct_input = st.sidebar.number_input(
@@ -116,10 +127,11 @@ def main():
     asset_cost_basis = st.sidebar.number_input(
         "Asset Cost Basis ($)",
         min_value=0.0,
-        value=60000.0,
+        value=None,
         step=1000.0,
         format="%.2f",
-        help="Your acquisition cost for the property"
+        help="Your acquisition cost for the property",
+        placeholder="Enter cost basis"
     )
 
     interest_rate = st.sidebar.number_input(
@@ -162,6 +174,14 @@ def main():
     )
 
     # Validation
+    if purchase_price is None or purchase_price <= 0:
+        st.info("Please enter a Purchase Price to continue.")
+        return
+
+    if asset_cost_basis is None:
+        st.info("Please enter an Asset Cost Basis to continue.")
+        return
+
     amount_financed = purchase_price - down_payment
     if amount_financed <= 0:
         st.error("Down payment must be less than purchase price.")
@@ -205,7 +225,9 @@ def main():
         down_payment_pct = (params['down_payment'] / params['purchase_price']) * 100
         min_down_payment = max(params['purchase_price'] * 0.10, 10000)
         if params['down_payment'] < min_down_payment:
-            st.warning(f"⚠️ Down payment ({format_currency(params['down_payment']).replace('$', r'\\$')}) is below minimum of 10% or \\$10,000 (whichever is greater: {format_currency(min_down_payment).replace('$', r'\\$')}). Consider requiring a higher down payment.")
+            dp_str = f"{params['down_payment']:,.2f}"
+            min_str = f"{min_down_payment:,.2f}"
+            st.warning(f"⚠️ Down payment (${dp_str}) is below minimum of 10% or $10,000 (whichever is greater: ${min_str}). Consider requiring a higher down payment.")
         if params['purchase_price'] <= params['asset_cost_basis']:
             purchase_str = format_currency(params['purchase_price']).replace('$', r'\$')
             basis_str = format_currency(params['asset_cost_basis']).replace('$', r'\$')
