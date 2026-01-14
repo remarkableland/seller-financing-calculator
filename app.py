@@ -76,13 +76,8 @@ def main():
             border-color: #1e7e34;
         }
         /* Highlight required fields with yellow background */
-        div[data-testid="stSidebar"] div[data-testid="stNumberInput"]:has(label:contains("Purchase Price")) input,
-        div[data-testid="stSidebar"] div[data-testid="stNumberInput"]:has(label:contains("Asset Cost Basis")) input {
-            background-color: #fffacd !important;
-        }
-        /* Alternative approach using nth-child for first and fourth number inputs */
-        div[data-testid="stSidebar"] .stNumberInput:nth-of-type(1) input,
-        div[data-testid="stSidebar"] .stNumberInput:nth-of-type(4) input {
+        [data-testid="stSidebar"] input[aria-label="Purchase Price ($)"],
+        [data-testid="stSidebar"] input[aria-label="Asset Cost Basis ($)"] {
             background-color: #fffacd !important;
         }
         </style>
