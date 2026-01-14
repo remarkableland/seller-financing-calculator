@@ -80,6 +80,11 @@ def main():
         [data-testid="stSidebar"] input[aria-label="Asset Cost Basis ($)"] {
             background-color: #fffacd !important;
         }
+        /* Bold labels for required fields */
+        [data-testid="stSidebar"] label:has(+ div input[aria-label="Purchase Price ($)"]),
+        [data-testid="stSidebar"] label:has(+ div input[aria-label="Asset Cost Basis ($)"]) {
+            font-weight: bold !important;
+        }
         </style>
     """, unsafe_allow_html=True)
 
@@ -89,6 +94,7 @@ def main():
     # Sidebar inputs
     st.sidebar.header("Loan Parameters")
 
+    st.sidebar.markdown("**Purchase Price ($)** *")
     purchase_price = st.sidebar.number_input(
         "Purchase Price ($)",
         min_value=0.0,
@@ -96,7 +102,8 @@ def main():
         step=1000.0,
         format="%.2f",
         help="Total property purchase price",
-        placeholder="Enter purchase price"
+        placeholder="Enter purchase price",
+        label_visibility="collapsed"
     )
 
     down_payment_pct_input = st.sidebar.number_input(
@@ -118,6 +125,7 @@ def main():
         help="Paid separately by buyer (not financed)"
     )
 
+    st.sidebar.markdown("**Asset Cost Basis ($)** *")
     asset_cost_basis = st.sidebar.number_input(
         "Asset Cost Basis ($)",
         min_value=0.0,
@@ -125,7 +133,8 @@ def main():
         step=1000.0,
         format="%.2f",
         help="Your acquisition cost for the property",
-        placeholder="Enter cost basis"
+        placeholder="Enter cost basis",
+        label_visibility="collapsed"
     )
 
     interest_rate = st.sidebar.number_input(
