@@ -171,7 +171,7 @@ def main():
         "Interest-Only Period (Years)",
         min_value=1,
         max_value=max(1, term_years - 1),
-        value=min(3, max(1, term_years - 1)),
+        value=min(2, max(1, term_years - 1)),
         step=1,
         help="For Hybrid loan: years of interest-only payments before amortization"
     )
