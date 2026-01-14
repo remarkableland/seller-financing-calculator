@@ -113,7 +113,6 @@ def main():
         format="%.1f",
         help="Percentage of purchase price buyer pays at closing"
     )
-    down_payment = purchase_price * (down_payment_pct_input / 100)
 
     closing_costs = st.sidebar.number_input(
         "Closing Costs ($)",
@@ -181,6 +180,9 @@ def main():
     if asset_cost_basis is None:
         st.info("Please enter an Asset Cost Basis to continue.")
         return
+
+    # Calculate down payment after validation
+    down_payment = purchase_price * (down_payment_pct_input / 100)
 
     amount_financed = purchase_price - down_payment
     if amount_financed <= 0:
