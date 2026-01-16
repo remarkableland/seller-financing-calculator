@@ -106,15 +106,34 @@ def main():
         label_visibility="collapsed"
     )
 
-    down_payment_pct_input = st.sidebar.number_input(
-        "Down Payment (%)",
-        min_value=0.0,
-        max_value=100.0,
-        value=25.0,
-        step=1.0,
-        format="%.1f",
-        help="Percentage of purchase price buyer pays at closing"
+    down_payment_type = st.sidebar.radio(
+        "Down Payment Type",
+        options=["Percentage", "Dollar Amount"],
+        horizontal=True,
+        label_visibility="collapsed"
     )
+
+    if down_payment_type == "Percentage":
+        down_payment_pct_input = st.sidebar.number_input(
+            "Down Payment (%)",
+            min_value=0.0,
+            max_value=100.0,
+            value=25.0,
+            step=1.0,
+            format="%.1f",
+            help="Percentage of purchase price buyer pays at closing"
+        )
+        down_payment_dollar_input = None
+    else:
+        down_payment_dollar_input = st.sidebar.number_input(
+            "Down Payment ($)",
+            min_value=0.0,
+            value=25000.0,
+            step=1000.0,
+            format="%.2f",
+            help="Dollar amount buyer pays at closing"
+        )
+        down_payment_pct_input = None
 
     closing_costs = st.sidebar.number_input(
         "Closing Costs ($)",
@@ -186,7 +205,10 @@ def main():
         return
 
     # Calculate down payment after validation
-    down_payment = purchase_price * (down_payment_pct_input / 100)
+    if down_payment_pct_input is not None:
+        down_payment = purchase_price * (down_payment_pct_input / 100)
+    else:
+        down_payment = down_payment_dollar_input
 
     amount_financed = purchase_price - down_payment
     if amount_financed <= 0:
