@@ -312,6 +312,10 @@ def main():
 
             st.subheader(loan_name)
 
+            # LTV calculation (Amount Financed / Purchase Price as FMV)
+            ltv = (summary.amount_financed / params['purchase_price']) * 100 if params['purchase_price'] > 0 else 0
+            st.write(f"**LTV:** {ltv:.1f}% (Amount Financed: {format_currency(summary.amount_financed)} / FMV: {format_currency(params['purchase_price'])})")
+
             # Create a table-like display for discount to par
             cols = st.columns(4)
             for i, analysis in enumerate(discount_scenarios):
