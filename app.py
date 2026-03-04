@@ -22,7 +22,7 @@ def format_currency_whole(amount: float) -> str:
     return f"${amount:,.0f}"
 
 
-def display_loan_summary(summary: LoanSummary, column):
+def display_loan_summary(summary: LoanSummary, column, file_prefix: str = ""):
     """Display a single loan summary in a column."""
     with column:
         st.subheader(summary.loan_type)
@@ -50,7 +50,7 @@ def display_loan_summary(summary: LoanSummary, column):
         st.download_button(
             label="Download TILA Disclosure",
             data=png_bytes,
-            file_name=f"tila_{summary.loan_type.replace(' ', '_').replace('(', '').replace(')', '').lower()}.png",
+            file_name=f"{file_prefix + '_' if file_prefix else ''}tila_{summary.loan_type.replace(' ', '_').replace('(', '').replace(')', '').lower()}.png",
             mime="image/png",
             use_container_width=True,
             key=f"png_{summary.loan_type}"
@@ -93,6 +93,13 @@ def main():
 
     # Sidebar inputs
     st.sidebar.header("Loan Parameters")
+
+    file_prefix = st.sidebar.text_input(
+        "File Name Prefix",
+        value="",
+        help="Prepended to downloaded file names (e.g. 'Smith_Property')",
+        placeholder="e.g. Smith_Property"
+    )
 
     st.sidebar.markdown("**Purchase Price ($)** *")
     purchase_price = st.sidebar.number_input(
@@ -237,7 +244,8 @@ def main():
             'interest_rate': annual_rate,
             'term_years': term_years,
             'io_period_years': io_period_years,
-            'monthly_servicing_fee': monthly_servicing_fee
+            'monthly_servicing_fee': monthly_servicing_fee,
+            'file_prefix': file_prefix
         }
 
     # Display results
@@ -289,9 +297,10 @@ def main():
         # Three columns for the three loan types
         col1, col2, col3 = st.columns(3)
 
-        display_loan_summary(scenarios["standard"], col1)
-        display_loan_summary(scenarios["interest_only"], col2)
-        display_loan_summary(scenarios["hybrid"], col3)
+        prefix = params.get('file_prefix', '')
+        display_loan_summary(scenarios["standard"], col1, prefix)
+        display_loan_summary(scenarios["interest_only"], col2, prefix)
+        display_loan_summary(scenarios["hybrid"], col3, prefix)
 
         # Note Sale Analysis section
         st.divider()
